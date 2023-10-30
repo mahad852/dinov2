@@ -367,8 +367,12 @@ The training and evaluation code requires PyTorch 2.0 and [xFormers](https://git
 *[conda](https://docs.conda.io/projects/conda/en/latest/user-guide/getting-started.html)* **(Recommended)** - Clone the repository and then create and activate a `dinov2` conda environment using the provided environment definition:
 
 ```shell
-conda env create -f conda.yaml
+module load anaconda/anaconda3
+srun conda create --name dinov2 -c conda-forge python=3.9 --yes
 conda activate dinov2
+pip install -r requirements.txt
+pip install openmim
+pip install -r requirements-extras.txt
 ```
 
 *[pip](https://pip.pypa.io/en/stable/getting-started/)* - Clone the repository and then use the provided `requirements.txt` to install the dependencies:
