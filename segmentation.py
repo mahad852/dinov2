@@ -20,6 +20,8 @@ import numpy as np
 
 import dinov2.eval.segmentation.utils.colormaps as colormaps
 
+import dinov2.eval.segmentation_m2f.models.segmentors
+
 class CenterPadding(torch.nn.Module):
     def __init__(self, multiple):
         super().__init__()
@@ -117,6 +119,30 @@ for file_name in os.listdir('../ade20k_images'):
     segmentation_logits = inference_segmentor(model, array)[0]
     segmented_image = render_segmentation(segmentation_logits, HEAD_DATASET)
     segmented_image.save(new_file_path)
+
+
+CONFIG_URL = f"{DINOV2_BASE_URL}/dinov2_vitg14/dinov2_vitg14_ade20k_m2f_config.py"
+CHECKPOINT_URL = f"{DINOV2_BASE_URL}/dinov2_vitg14/dinov2_vitg14_ade20k_m2f.pth"
+
+cfg_str = load_config_from_url(CONFIG_URL)
+cfg = mmcv.Config.fromstring(cfg_str, file_format=".py")
+
+model = init_segmentor(cfg)
+load_checkpoint(model, CHECKPOINT_URL, map_location="cpu")
+model.cuda()
+model.eval()
+
+for file_name in os.listdir('../ade20k_images'):
+    if file_name.split('.')[-1] not in ['png', 'jpg', 'jpeg']:
+        continue
+    path = os.path.join('../ade20k_images', file_name)
+    new_file_path = os.path.join('segmented_images', file_name.split('.')[0] + '_mask' + file_name.split('.')[-1])
+
+    array = np.array(Image.open(path).convert('RGB'))[:, :, ::-1] # BGR
+    segmentation_logits = inference_segmentor(model, array)[0]
+    segmented_image = render_segmentation(segmentation_logits, HEAD_DATASET)
+    segmented_image.save(new_file_path)
+
 
 # EXAMPLE_IMAGE_URL = "https://dl.fbaipublicfiles.com/dinov2/images/example.jpg"
 
