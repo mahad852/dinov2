@@ -27,9 +27,8 @@ export MASTER_PORT=$(expr 10000 + $(echo -n $SLURM_JOBID | tail -c 4))
 echo "include-system-site-packages=false" >> $CONDA_PREFIX/pyvenv.cfg
 export PYTHONPATH=${PYTHONPATH}:${HOME}/.local/lib/python3.9/site-packages
 
-python dinov2/run/eval/knn.py \
-    --config-file dinov2/configs/eval/vitg14_reg4_pretrain.yaml \
-    --pretrained-weights https://dl.fbaipublicfiles.com/dinov2/dinov2_vitg14/dinov2_vitg14_reg4_pretrain.pth \
-    --output-dir eval/knn \
-    --train-dataset ImageNet:split=TRAIN:root=/datasets/ImageNet2012nonpub/train:extra=../imagenet_extras/ \
-    --val-dataset ImageNet:split=VAL:root=/datasets/ImageNet2012nonpub/validation:extra=../imagenet_extras/
+python dinov2/run/eval/linear.py \
+    --config-file dinov2/configs/eval/vitg14_pretrain.yaml \
+    --pretrained-weights https://dl.fbaipublicfiles.com/dinov2/dinov2_vitg14/dinov2_vitg14_pretrain.pth \
+    --train-dataset ImageNet:split=TRAIN:root=<PATH/TO/DATASET>:extra=<PATH/TO/DATASET> \
+    --val-dataset ImageNet:split=VAL:root=<PATH/TO/DATASET>:extra=<PATH/TO/DATASET>
