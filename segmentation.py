@@ -115,7 +115,7 @@ for file_name in os.listdir('../ade20k_images'):
     path = os.path.join('../ade20k_images', file_name)
     new_file_path = os.path.join('segmented_images', file_name)
 
-    if new_file_path in os.listdir('segmented_images'):
+    if file_name in os.listdir('segmented_images'):
         continue
 
     array = np.array(Image.open(path).convert('RGB'))[:, :, ::-1] # BGR
