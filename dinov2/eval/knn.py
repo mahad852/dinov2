@@ -401,5 +401,4 @@ if __name__ == "__main__":
     description = "DINOv2 k-NN evaluation"
     args_parser = get_args_parser(description=description)
     args = args_parser.parse_args()
-    main(args)
-    # sys.exit(main(args))
+    sys.exit(main(args))
