@@ -10,6 +10,7 @@ import os
 from typing import Callable, List, Optional, Tuple, Union
 
 import numpy as np
+import json
 
 from .extended import ExtendedVisionDataset
 
@@ -169,17 +170,16 @@ class ImageNet(ExtendedVisionDataset):
         return len(entries)
 
     def _load_labels(self, labels_path: str) -> List[Tuple[str, str]]:
-        labels_full_path = os.path.join(self.root, labels_path)
         labels = []
 
         try:
-            with open(labels_full_path, "r") as f:
-                reader = csv.reader(f)
-                for row in reader:
-                    class_id, class_name = row
+            with open(labels_path, "r") as f:
+                json_obj = json.load(f)
+                for index in range(1000):
+                    class_id, class_name = json_obj[str(index)]
                     labels.append((class_id, class_name))
         except OSError as e:
-            raise RuntimeError(f'can not read labels file "{labels_full_path}"') from e
+            raise RuntimeError(f'can not read labels file "{labels_path}"') from e
 
         return labels
 
@@ -190,7 +190,7 @@ class ImageNet(ExtendedVisionDataset):
             sample_count = split.length
             max_class_id_length, max_class_name_length = 0, 0
         else:
-            labels_path = "labels.txt"
+            labels_path = os.path.join('..', 'imagenet_class_index.json')
             logger.info(f'loading labels from "{labels_path}"')
             labels = self._load_labels(labels_path)
 
