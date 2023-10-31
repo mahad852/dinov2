@@ -108,6 +108,8 @@ def render_segmentation(segmentation_logits, dataset):
     return Image.fromarray(segmentation_values)
 
 for file_name in os.listdir('../ade20k_images'):
+    if file_name.split('.')[-1] not in ['png', 'jpg', 'jpeg']:
+        continue
     path = os.path.join('../ade20k_images', file_name)
     new_file_path = os.path.join('segmented_images', file_name)
 
