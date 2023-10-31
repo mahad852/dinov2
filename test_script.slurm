@@ -38,4 +38,4 @@ python dinov2/eval/knn.py \
     --pretrained-weights https://dl.fbaipublicfiles.com/dinov2/dinov2_vitg14/dinov2_vitg14_reg4_pretrain.pth \
     --train-dataset ImageNet:split=TRAIN:root=/datasets/ImageNet2012nonpub:extra=../imagenet_extras/ \
     --val-dataset ImageNet:split=VAL:root=/datasets/ImageNet2012nonpub:extra=../imagenet_extras/ \
-    # --classifier-fpath https://dl.fbaipublicfiles.com/dinov2/dinov2_vitg14/dinov2_vitg14_reg4_linear4_head.pth
+    --classifier-fpath https://dl.fbaipublicfiles.com/dinov2/dinov2_vitg14/dinov2_vitg14_reg4_linear4_head.pth
