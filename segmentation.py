@@ -111,11 +111,10 @@ for file_name in os.listdir('../ade20k_images'):
     path = os.path.join('../ade20k_images', file_name)
     new_file_path = os.path.join('segmented_images', file_name)
 
-    with open(path) as f:
-        array = np.array(Image.open(f).convert('RGB'))[:, :, ::-1] # BGR
-        segmentation_logits = inference_segmentor(model, array)[0]
-        segmented_image = render_segmentation(segmentation_logits, HEAD_DATASET)
-        segmented_image.save(new_file_path)
+    array = np.array(Image.open(path).convert('RGB'))[:, :, ::-1] # BGR
+    segmentation_logits = inference_segmentor(model, array)[0]
+    segmented_image = render_segmentation(segmentation_logits, HEAD_DATASET)
+    segmented_image.save(new_file_path)
 
 # EXAMPLE_IMAGE_URL = "https://dl.fbaipublicfiles.com/dinov2/images/example.jpg"
 
