@@ -1,4 +1,4 @@
-import sys
+import os
 import math
 import itertools
 from functools import partial
@@ -51,7 +51,7 @@ def create_segmenter(cfg, backbone_model):
     model.init_weights()
     return model
 
-BACKBONE_SIZE = "small" # in ("small", "base", "large" or "giant")
+BACKBONE_SIZE = "giant" # in ("small", "base", "large" or "giant")
 
 
 backbone_archs = {
@@ -73,7 +73,7 @@ def load_config_from_url(url: str) -> str:
 
 
 HEAD_SCALE_COUNT = 3 # more scales: slower but better results, in (1,2,3,4,5)
-HEAD_DATASET = "voc2012" # in ("ade20k", "voc2012")
+HEAD_DATASET = "ade20k" # in ("ade20k", "voc2012")
 HEAD_TYPE = "ms" # in ("ms, "linear")
 
 
@@ -96,16 +96,10 @@ def load_image_from_url(url: str) -> Image:
     with urllib.request.urlopen(url) as f:
         return Image.open(f).convert("RGB")
 
-
-EXAMPLE_IMAGE_URL = "https://dl.fbaipublicfiles.com/dinov2/images/example.jpg"
-
-image = load_image_from_url(EXAMPLE_IMAGE_URL)
-
 DATASET_COLORMAPS = {
     "ade20k": colormaps.ADE20K_COLORMAP,
     "voc2012": colormaps.VOC2012_COLORMAP,
 }
-
 
 def render_segmentation(segmentation_logits, dataset):
     colormap = DATASET_COLORMAPS[dataset]
@@ -113,8 +107,16 @@ def render_segmentation(segmentation_logits, dataset):
     segmentation_values = colormap_array[segmentation_logits + 1]
     return Image.fromarray(segmentation_values)
 
+for file_name in os.listdir('../ade20k_images'):
+    path = os.path.join('../ade20k_images', file_name)
+    new_file_path = os.path.join('segmented_images', file_name)
 
-array = np.array(image)[:, :, ::-1] # BGR
-segmentation_logits = inference_segmentor(model, array)[0]
-segmented_image = render_segmentation(segmentation_logits, HEAD_DATASET)
-segmented_image.save('segmented_images/example.jpg')
+    with open(path) as f:
+        array = np.array(Image.open(f).convert('RGB'))[:, :, ::-1] # BGR
+        segmentation_logits = inference_segmentor(model, array)[0]
+        segmented_image = render_segmentation(segmentation_logits, HEAD_DATASET)
+        segmented_image.save(new_file_path)
+
+# EXAMPLE_IMAGE_URL = "https://dl.fbaipublicfiles.com/dinov2/images/example.jpg"
+
+# image = load_image_from_url(EXAMPLE_IMAGE_URL)
